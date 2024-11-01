@@ -2,7 +2,7 @@ import { readFile } from 'fs/promises';
 import { join } from 'path';
 
 export default defineEventHandler(async () => {
-  const filePath = join(process.cwd(), 'public/task_json.txt');
+  const filePath = join(process.cwd(), 'public', 'task_json.txt');
   console.log('Looking for file at:', filePath);
 
   try {
@@ -12,7 +12,7 @@ export default defineEventHandler(async () => {
     console.error('Error reading file:', error);
     throw createError({
       statusCode: 500,
-      statusMessage: 'File not found or cannot be read',
+      statusMessage: 'File not found or cannot be read: ' + error.message,
     });
   }
 });
