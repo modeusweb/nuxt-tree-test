@@ -1,19 +1,18 @@
-import { readFile } from 'fs/promises';
-import { join } from 'path';
-
 export default defineEventHandler(async () => {
-  const filePath =
-    process.env.NODE_ENV === 'development'
-      ? join(process.cwd(), 'public', 'task_json.txt')
-      : join(process.cwd(), 'task_json.txt');
+  const config = useRuntimeConfig();
+  const fileUrl = `${config.public.baseURL}/task_json.txt`;
 
-  console.log('Looking for file at:', filePath);
+  console.log('Fetching file from URL:', fileUrl);
 
   try {
-    const data = await readFile(filePath, 'utf-8');
-    return JSON.parse(data);
+    const response = await fetch(fileUrl);
+    if (!response.ok)
+      throw new Error(`Failed to fetch file: ${response.statusText}`);
+
+    // Предполагается, что файл имеет JSON-формат
+    return await response.json();
   } catch (error) {
-    console.error('Error reading file:', error);
+    console.error('Error fetching file:', error);
     throw createError({
       statusCode: 500,
       statusMessage: 'File not found or cannot be read: ' + error.message,

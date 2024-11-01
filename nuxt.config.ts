@@ -39,4 +39,9 @@ export default defineNuxtConfig({
   },
   css: ['@/assets/css/tailwind.css'],
   buildModules: ['@nuxt/typescript-build'],
+  runtimeConfig: {
+    public: {
+      baseURL: process.env.NUXT_PUBLIC_BASE_URL || 'http://localhost:3000',
+    },
+  },
 });
