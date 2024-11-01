@@ -2,7 +2,11 @@ import { readFile } from 'fs/promises';
 import { join } from 'path';
 
 export default defineEventHandler(async () => {
-  const filePath = join(process.cwd(), 'public', 'task_json.txt');
+  const filePath =
+    process.env.NODE_ENV === 'development'
+      ? join(process.cwd(), 'public', 'task_json.txt')
+      : join(process.cwd(), 'task_json.txt');
+
   console.log('Looking for file at:', filePath);
 
   try {
