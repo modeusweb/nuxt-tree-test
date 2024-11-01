@@ -11,11 +11,13 @@
   },
   "dependencies": {
     "@nuxt/typescript-build": "^3.0.2",
+    "@nuxtjs/tailwindcss": "^6.12.2",
+    "@pinia/nuxt": "^0.6.1",
     "autoprefixer": "^10.4.20",
     "nuxt": "^3.13.2",
+    "pinia": "^2.2.5",
     "postcss": "^8.4.47",
     "prettier": "^3.3.3",
-    "tailwindcss": "^3.4.14",
     "vue": "latest",
     "vue-router": "latest"
   }
