@@ -21,19 +21,11 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  node: {
-    id: number;
-    depth: number;
-    numchild: number;
-    category_image: string;
-    logo_image: string;
-    menu_image: string;
-    locale: Record<string, any>;
-    path_to_top?: number[];
-    childs?: Array<any>;
-  };
-}>();
+interface Props {
+  node: Category;
+}
+
+const props = defineProps<Props>();
 
 const isOpen = ref(false);
 const toggleOpen = () => {

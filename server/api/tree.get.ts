@@ -1,21 +1,36 @@
+import { promises as fs } from 'fs';
+import { join } from 'path';
+
+const readFileFromLocal = async (filePath) => {
+  const fileContent = await fs.readFile(filePath, 'utf-8');
+  return JSON.parse(fileContent);
+};
+
+const readFileFromUrl = async (url) => {
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Ошибка HTTP: ${response.status}`);
+  }
+  const fileContent = await response.text();
+  return JSON.parse(fileContent);
+};
+
+const handleError = (error) => {
+  console.error('Ошибка при получении данных:', error);
+  return { error: 'Не удалось загрузить данные дерева' };
+};
+
 export default defineEventHandler(async () => {
-  const config = useRuntimeConfig();
-  const fileUrl = `${config.public.baseURL}/task_json.txt`;
-
-  console.log('Fetching file from URL:', fileUrl);
-
   try {
-    const response = await fetch(fileUrl);
-    if (!response.ok)
-      throw new Error(`Failed to fetch file: ${response.statusText}`);
+    const isDevelopment = process.env.NODE_ENV === 'development';
+    const filePath = isDevelopment
+      ? join(process.cwd(), 'public', 'task_json.txt')
+      : 'https://nuxt-tree-test.vercel.app/task_json.txt';
 
-    // Предполагается, что файл имеет JSON-формат
-    return await response.json();
+    return isDevelopment
+      ? await readFileFromLocal(filePath)
+      : await readFileFromUrl(filePath);
   } catch (error) {
-    console.error('Error fetching file:', error);
-    throw createError({
-      statusCode: 500,
-      statusMessage: 'File not found or cannot be read: ' + error.message,
-    });
+    return handleError(error);
   }
 });
